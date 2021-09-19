@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	helpers.RetrieveTS("./data/side-projects/2021-09-16.json")
+	helpers.Start()
 }
