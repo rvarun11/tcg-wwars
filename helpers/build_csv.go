@@ -3,8 +3,8 @@ package helpers
 import (
 	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"io/fs"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -45,7 +45,7 @@ func walk(path string, d fs.DirEntry, e error) error {
 	if !d.IsDir() {
 		var f file
 		byteVal, _ := os.ReadFile(path)
-		json.Unmarshal(byteVal, &f)
+		_ = json.Unmarshal(byteVal, &f)
 		data = append(data, f)
 
 	}
@@ -61,7 +61,7 @@ func buildResult() [][]string {
 			if msg.User != aid || msg.User != rid && msg.ReplyUsersCount > 0 {
 				for _, r := range msg.Replies {
 					if r.User == aid || r.User == rid {
-						row := buildRow(i, msg.Text, r.User, r.Ts)
+						row := buildRow(i, msg.Text, r.Ts)
 						result = append(result, row)
 					}
 				}
@@ -74,12 +74,12 @@ func buildResult() [][]string {
 
 // buildRow takes the index of current file with user and ts, and returns the row
 // this works because data stores files in linear order so the reply must be in that file or a later file, but not before
-func buildRow(index int, text string, user string, ts string) []string {
+func buildRow(index int, text string, ts string) []string {
 	row := []string{text, "", ""}
 
 	for i := index; i < len(data); i++ {
-		file := data[i]
-		for _, msg := range file {
+		f := data[i]
+		for _, msg := range f {
 			if msg.Ts == ts {
 				switch msg.User {
 				case aid:
@@ -95,19 +95,15 @@ func buildRow(index int, text string, user string, ts string) []string {
 
 // BuildCsv builds a CSV file in required format for all json files in given directory
 func BuildCsv(path string) {
-	filepath.WalkDir(path, walk)
+	_ = filepath.WalkDir(path, walk)
 
 	result := buildResult()
 
-	csvFile, err := os.Create("./test.csv")
+	csvFile, _ := os.Create("./test.csv")
 	defer csvFile.Close()
 
-	if err != nil {
-		log.Fatal("ERROR creating the CSV File:", err)
-	}
-
+	fmt.Println("Building CSV.....")
 	writer := csv.NewWriter(csvFile)
-
 	for _, row := range result {
 		_ = writer.Write(row)
 	}
