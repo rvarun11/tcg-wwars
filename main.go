@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	helpers.Start()
+	helpers.BuildCsv("./data/side-projects/2021-09-16.json")
 }
