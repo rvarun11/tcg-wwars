@@ -98,7 +98,6 @@ func BuildCsv(path string) {
 	_ = filepath.WalkDir(path, walk)
 
 	result := buildResult()
-
 	csvFile, _ := os.Create("./test.csv")
 	defer csvFile.Close()
 
