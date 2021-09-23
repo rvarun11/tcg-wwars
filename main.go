@@ -26,20 +26,24 @@ func main() {
 
 	go printCmdEvents(bot.CommandEvents())
 
-	bot.Command("ping", &slacker.CommandDefinition{
+	// 1. Take any input and repeat it back
+
+	definition := &slacker.CommandDefinition{
+		Description: "Echo a word!",
+		Example:     "echo hello",
 		Handler: func(botCtx slacker.BotContext, request slacker.Request, response slacker.ResponseWriter) {
-			err := response.Reply("Pong!!!!")
-			if err != nil {
-				log.Println(err)
-			}
+			word := request.Param("question")
+			response.Reply(word)
 		},
-	})
+	}
+
+	bot.Command("echo <question>", definition)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	err := bot.Listen(ctx)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatal(err)
 	}
 }
