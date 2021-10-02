@@ -29,15 +29,12 @@ func main() {
 	// 1. Take any input and repeat it back
 
 	definition := &slacker.CommandDefinition{
-		Description: "Echo a word!",
-		Example:     "echo hello",
 		Handler: func(botCtx slacker.BotContext, request slacker.Request, response slacker.ResponseWriter) {
-			word := request.Param("question")
-			response.Reply(word)
+			response.Reply("pong")
 		},
 	}
 
-	bot.Command("echo <question>", definition)
+	bot.Command("ping", definition)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
