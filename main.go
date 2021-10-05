@@ -10,7 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"tcg-wwars/tool"
+	"tcg.ai/tool"
 )
 
 type Query struct {
@@ -34,14 +34,20 @@ func printCmdEvents(analyticsChannel <-chan *slacker.CommandEvent) {
 
 func main() {
 	serviceUrl := "http://localhost:8000/"
-
 	tool.SetTokens()
-
 	bot := slacker.NewClient(os.Getenv("SLACK_BOT_TOKEN"), os.Getenv("SLACK_APP_TOKEN"))
 
 	//go printCmdEvents(bot.CommandEvents())
 
-	definition := &slacker.CommandDefinition{
+	defaultCmd := func(botCtx slacker.BotContext, request slacker.Request, response slacker.ResponseWriter) {
+		response.Reply("Hi!! I'm sorry I didn't get you. " +
+			"Please type *ask* followed by your query and I'll see what I can do. :) \n" +
+			"For eg: _ask How far is the sun?_")
+	}
+
+	bot.DefaultCommand(defaultCmd)
+	//TODO: 1. find a way to get query witout ask. 2. handle edge cases with invalid input.
+	bot.Command("ask <query>", &slacker.CommandDefinition{
 		Description: "ask Ask a question",
 		Example:     "ask How far is the sun?",
 		Handler: func(botCtx slacker.BotContext, request slacker.Request, response slacker.ResponseWriter) {
@@ -49,9 +55,7 @@ func main() {
 			reply := getReply(serviceUrl, query)
 			response.Reply(reply)
 		},
-	}
-
-	bot.Command("ask <query>", definition)
+	})
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

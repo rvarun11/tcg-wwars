@@ -1,12 +1,13 @@
-module tcg-wwars
+module tcg.ai
 
 go 1.17
+
+require github.com/shomali11/slacker v0.0.0-20210820202715-e3dbcff4056e
 
 require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/shomali11/commander v0.0.0-20191122162317-51bc574c29ba // indirect
 	github.com/shomali11/proper v0.0.0-20180607004733-233a9a872c30 // indirect
-	github.com/shomali11/slacker v0.0.0-20210820202715-e3dbcff4056e // indirect
 	github.com/slack-go/slack v0.9.1 // indirect
 )
