@@ -10,7 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"tcg-wwars/helpers"
+	"tcg-wwars/tool"
 )
 
 type Query struct {
@@ -35,7 +35,7 @@ func printCmdEvents(analyticsChannel <-chan *slacker.CommandEvent) {
 func main() {
 	serviceUrl := "http://localhost:8000/"
 
-	helpers.SetTokens()
+	tool.SetTokens()
 
 	bot := slacker.NewClient(os.Getenv("SLACK_BOT_TOKEN"), os.Getenv("SLACK_APP_TOKEN"))
 
